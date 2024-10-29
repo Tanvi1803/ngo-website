@@ -3,27 +3,29 @@ import { motion } from 'framer-motion';
 
 const MembershipForm = () => {
   const [showForm, setShowForm] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     dob: '',
     contact: '',
     address: '',
     aadhar: '',
-    whatsapp: '',
     email: '',
     acceptance: false,
+    image: null,
   });
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked, files } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === 'checkbox' ? checked : type === 'file' ? files[0] : value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setShowPopup(true);
     console.log(formData);
     // Add your form submission logic here
   };
@@ -56,7 +58,7 @@ const MembershipForm = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
-            {['name', 'dob', 'contact', 'address', 'aadhar', 'whatsapp', 'email'].map((field) => (
+            {['name', 'dob', 'contact', 'address', 'aadhar', 'email'].map((field) => (
               <div className="mb-4" key={field}>
                 <label className="block mb-2" htmlFor={field}>
                   {field.charAt(0).toUpperCase() + field.slice(1).replace(/_/g, ' ')}
@@ -72,6 +74,20 @@ const MembershipForm = () => {
                 />
               </div>
             ))}
+            <div className="mb-4">
+              <label className="block mb-2" htmlFor="image">
+                Upload Picture
+              </label>
+              <input
+                type="file"
+                id="image"
+                name="image"
+                accept="image/*"
+                onChange={handleChange}
+                required
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
             <div className="mb-4">
               <input
                 type="checkbox"
@@ -99,10 +115,12 @@ const MembershipForm = () => {
           </motion.form>
         </div>
       ) : (
-        <motion.div className="max-w-2xl p-5 mx-auto bg-white rounded-lg shadow-md"
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}>
+        <motion.div
+          className="max-w-2xl p-5 mx-auto bg-white rounded-lg shadow-md"
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
           <h3 className="text-lg font-bold">Membership Guidelines</h3>
           <ul className="pl-5 list-disc">
             <li>Every Member will have to donate some amount in group funds per month for the on-field operations. We believe in full transparency; thus, every detail of the total collected money and expenses will be shared with you via WhatsApp group.</li>
@@ -125,6 +143,44 @@ const MembershipForm = () => {
             View Form
           </button>
         </motion.div>
+      )}
+
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded shadow-lg w-80">
+            <h2 className="text-xl font-bold mb-4">Form Submitted</h2>
+            <p><strong>Name:</strong> {formData.name}</p>
+            <p><strong>Date of Birth:</strong> {formData.dob}</p>
+            <p><strong>Contact:</strong> {formData.contact}</p>
+            <p><strong>Address:</strong> {formData.address}</p>
+            <p><strong>Aadhar:</strong> {formData.aadhar}</p>
+            <p><strong>Email:</strong> {formData.email}</p>
+            {formData.image && (
+              <div className="mt-4">
+                <strong>Uploaded Picture:</strong>
+                <img
+                  src={URL.createObjectURL(formData.image)}
+                  alt="Uploaded"
+                  className="w-full h-auto mt-2"
+                />
+              </div>
+            )}
+            <div className="flex justify-between mt-5">
+              <button
+                onClick={() => setShowPopup(false)}
+                className="w-full p-2 text-white bg-amber-500 rounded hover:bg-amber-600"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => setShowForm(true)}
+                className="w-full p-2 text-white bg-gray-300 rounded hover:bg-gray-400"
+              >
+                Back
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
