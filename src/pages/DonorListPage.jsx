@@ -27,6 +27,12 @@ function DonorListPage() {
     console.log("Loaded and updated donor list:", updatedDonorList);
   }, [donors]);
 
+  const removeDonor = (id) => {
+    const updatedList = donorList.filter(donor => donor.id !== id);
+    localStorage.setItem('donorList', JSON.stringify(updatedList));
+    setDonorList(updatedList);
+  };
+
   return (
     <>
       <Navbar />
@@ -44,6 +50,12 @@ function DonorListPage() {
                 <div style={styles.donationInfo}>
                   <span style={styles.amount}>₹{donor.amount}</span>
                   <span style={styles.paymentType}>{donor.paymentType}</span>
+                  <button
+                    onClick={() => removeDonor(donor.id)}
+                    style={styles.removeButton}
+                  >
+                    Remove
+                  </button>
                 </div>
               </li>
             ))
@@ -121,6 +133,15 @@ const styles = {
     fontSize: '14px',
     color: '#2980b9',
     marginTop: '5px',
+  },
+  removeButton: {
+    marginTop: '5px',
+    padding: '5px 10px',
+    backgroundColor: '#e74c3c',
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
   },
   noDonors: {
     textAlign: 'center',
