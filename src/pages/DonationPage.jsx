@@ -12,8 +12,9 @@ function DonationPage() {
     email: '',
     phone: '',
     amount: '',
-    paymentType: 'Credit/Debit Card', // Default payment type
+    paymentType: 'Credit/Debit Card',
   });
+  const [showPayPalButton, setShowPayPalButton] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -24,28 +25,76 @@ function DonationPage() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleDonateClick = () => {
-    const newDonor = {
-      id: Date.now(), // Unique ID for each donor
-      name: formData.name,
-      email: formData.email,
-      amount: formData.amount,
-    };
+  const loadPayPalScript = () => {
+    if (document.getElementById('paypal-script')) return;
 
-    // Retrieve existing donors from localStorage
-    const storedDonors = JSON.parse(localStorage.getItem('donorList')) || [];
-    // Add the new donor to the list
-    const updatedDonorList = [...storedDonors, newDonor];
-
-    // Store the updated list in localStorage
-    localStorage.setItem('donorList', JSON.stringify(updatedDonorList));
-
-    // Mark donation as complete and navigate to Donor List page
-    setDonationComplete(true);
-    navigate('/donors', { state: { donors: updatedDonorList } });
+    const script = document.createElement('script');
+    script.id = 'paypal-script';
+    script.src = 'https://www.paypal.com/sdk/js?client-id=AQjAQ6IdlOoTTLe1YLsegWVGsOv46ixF_Hw0bPCiklOW_2B6Vyn1oSPLOxiXd6_UiiA1jOmbcuEU6pfU&currency=USD';
+    script.onload = renderPayPalButton;
+    document.body.appendChild(script);
   };
 
-  const paymentTypes = ['Credit/Debit Card', 'UPI', 'Net Banking'];
+  const handleDonateClick = () => {
+    if (formData.paymentType === 'PayPal') {
+      setShowPayPalButton(true);
+      loadPayPalScript();
+    } else {
+      const newDonor = {
+        id: Date.now(),
+        name: formData.name,
+        email: formData.email,
+        amount: formData.amount,
+      };
+
+      const storedDonors = JSON.parse(localStorage.getItem('donorList')) || [];
+      const updatedDonorList = [...storedDonors, newDonor];
+
+      localStorage.setItem('donorList', JSON.stringify(updatedDonorList));
+      setDonationComplete(true);
+      navigate('/donors', { state: { donors: updatedDonorList } });
+    }
+  };
+
+  const renderPayPalButton = () => {
+    window.paypal.Buttons({
+      createOrder: function (data, actions) {
+        return actions.order.create({
+          purchase_units: [
+            {
+              amount: {
+                value: formData.amount,
+              },
+            },
+          ],
+        });
+      },
+      onApprove: function (data, actions) {
+        return actions.order.capture().then(function (details) {
+          alert(`Transaction completed by ${details.payer.name.given_name}`);
+          const newDonor = {
+            id: Date.now(),
+            name: formData.name,
+            email: formData.email,
+            amount: formData.amount,
+          };
+
+          const storedDonors = JSON.parse(localStorage.getItem('donorList')) || [];
+          const updatedDonorList = [...storedDonors, newDonor];
+
+          localStorage.setItem('donorList', JSON.stringify(updatedDonorList));
+          setDonationComplete(true);
+          navigate('/donors', { state: { donors: updatedDonorList } });
+        });
+      },
+      onError: (err) => {
+        console.error('PayPal Checkout onError', err);
+        alert('Payment failed. Please try again.');
+      },
+    }).render('#paypal-button-container');
+  };
+
+  const paymentTypes = ['Credit/Debit Card', 'UPI', 'Net Banking', 'PayPal'];
 
   const styles = {
     container: {
@@ -156,13 +205,17 @@ function DonationPage() {
                 </option>
               ))}
             </select>
-            <button
-              type="button"
-              onClick={handleDonateClick}
-              style={styles.donateButton}
-            >
-              Donate
-            </button>
+            {showPayPalButton ? (
+              <div id="paypal-button-container" />
+            ) : (
+              <button
+                type="button"
+                onClick={handleDonateClick}
+                style={styles.donateButton}
+              >
+                Donate
+              </button>
+            )}
           </form>
         ) : (
           <div>Thank you for your donation!</div>

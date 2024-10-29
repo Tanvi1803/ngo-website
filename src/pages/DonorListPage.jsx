@@ -1,33 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 function DonorListPage() {
-  const location = useLocation();
-  const { donors = [] } = location.state || {}; // Get donors passed from the previous page
   const [donorList, setDonorList] = useState([]);
 
   useEffect(() => {
-    // Load existing donors from local storage
+    // Retrieve donor list from localStorage on component mount
     const storedDonors = JSON.parse(localStorage.getItem('donorList')) || [];
-
-    // Merge new donors with stored ones, ensuring no duplicates
-    const updatedDonorList = [...storedDonors, ...donors].reduce((acc, donor) => {
-      if (!acc.some(existingDonor => existingDonor.id === donor.id)) {
-        acc.push(donor);
-      }
-      return acc;
-    }, []);
-
-    // Save the merged list to local storage and update the state
-    localStorage.setItem('donorList', JSON.stringify(updatedDonorList));
-    setDonorList(updatedDonorList);
-
-    console.log("Loaded and updated donor list:", updatedDonorList);
-  }, [donors]);
+    setDonorList(storedDonors);
+  }, []);
 
   const removeDonor = (id) => {
+    // Filter out the donor by id and update both localStorage and state
     const updatedList = donorList.filter(donor => donor.id !== id);
     localStorage.setItem('donorList', JSON.stringify(updatedList));
     setDonorList(updatedList);
@@ -40,8 +25,8 @@ function DonorListPage() {
         <h2 style={styles.header}>Our Donors</h2>
         <ul style={styles.list}>
           {donorList.length > 0 ? (
-            donorList.map((donor, index) => (
-              <li key={index} style={styles.listItem}>
+            donorList.map((donor) => (
+              <li key={donor.id} style={styles.listItem}>
                 <div style={styles.donorInfo}>
                   <strong style={styles.name}>{donor.name}</strong>
                   {donor.email && <span style={styles.email}>{donor.email}</span>}
