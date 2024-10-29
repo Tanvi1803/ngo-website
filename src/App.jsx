@@ -7,7 +7,7 @@ import WorkPage from './pages/WorkPage';
 import PersonalDetailsPage from './pages/PersonalDetailsPage';
 import FaqsPage from './pages/FaqsPage';
 import MembershipPage from './pages/MembershipPage';
-import DonationPage from './pages/DonationPage'; // Ensure this matches the path
+import DonationPage from './pages/DonationPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import MottoPage from './pages/MottoPage';
 import ObjectivesPage from './pages/ObjectivesPage';
@@ -15,6 +15,9 @@ import BlogDetailPage from './pages/BlogDetailPage';
 import CoreMembersPage from './pages/CoreMembersPage';
 import DetailedProjectPage from './pages/DetailedWorkPage';
 import DonorListPage from './pages/DonorListPage'; // Import the new DonorListPage
+import EventPage from './pages/EventPage'; // Import Event Listing Page
+ // Import Event Registration Page
+import EventRegistration from './pages/EventRegistration';
 
 function App() {
     return (
@@ -34,8 +37,17 @@ function App() {
                     <Route path="/donors" element={<DonorListPage />} /> {/* New Donor List Page Route */}
                     <Route path="/privacy-policies" element={<PrivacyPolicyPage />} />
                     <Route path="/blogs/:id" element={<BlogDetailPage />} />
-                    <Route path="/our-works/:id" element={<DetailedProjectPage/>}/>
+                    <Route path="/our-works/:id" element={<DetailedProjectPage />} />
                     <Route path="/core-members" element={<CoreMembersPage />} />
+
+                    {/* Event Registration Routes */}
+                    <Route path="/events" element={<EventPage />} /> {/* Event Listing Page */}
+                    
+                    {/* <Route path="/register-event/:eventId" element={<EventRegistration />} /> */}
+                    <Route path="/event-registration/:id" element={<EventRegistration />} />
+
+
+                    
                 </Routes>
             </div>
         </Router>

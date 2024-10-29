@@ -208,6 +208,15 @@ const Navbar = () => {
             </li> */}
             <li>
               <Link
+                to="/events"
+                className={`flex items-center py-2 px-4 rounded-lg transition-colors duration-300 ${isActive('/events') ? 'bg-amber-800 text-white' : 'text-gray-800 hover:text-white hover:bg-amber-800'}`}
+                onClick={closeMenu}
+              >
+                <FaProjectDiagram className="mr-2" />Events
+              </Link>
+            </li>
+            <li>
+              <Link
                 to="/donate-us"
                 className={`flex items-center py-2 px-4 rounded-lg transition-colors duration-300 bg-yellow-500 text-white hover:bg-amber-900`}
                 onClick={closeMenu}
@@ -393,6 +402,15 @@ const Navbar = () => {
               onClick={closeMenu}
             >
               <FaDonate className="mr-2" />Donate Us
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/events"
+              className={`flex items-center py-2 px-4 rounded-lg transition-colors duration-300 ${isActive('/events') ? 'bg-amber-800 text-white' : 'text-gray-800 hover:text-white hover:bg-amber-800'}`}
+              onClick={closeMenu}
+            >
+              <FaProjectDiagram className="mr-2" />Events
             </Link>
           </li>
         </ul>
