@@ -14,6 +14,7 @@ import id6 from "../assets/works/blanket-donation-drive2/image1.png";
 import id7 from "../assets/works/children's-day-celebration/image1.png";
 import id8 from "../assets/works/stray-dogs/image1.png";
 import id9 from "../assets/works/food-donation/image1.png";
+import id12 from "../assets/works/blanket-donation-drive1/image1.png";
 import noimg from "../assets/works/fund-img.png";
 
 const projects = [
@@ -93,6 +94,13 @@ const projects = [
     description: 'An open mic event showcasing poetic talents.',
     date: '2022-11-14',
    
+  },
+  {
+    id: 12,
+    title: "Clothes Donation Drive 1",
+    description: "Providing basic necessity",
+    date: "2024-05-15",
+    image: id12
   }
 ];
 
