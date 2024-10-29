@@ -21,6 +21,14 @@ const blogs = [
     date: "2024-05-09",
     id: 2,
   },
+  {
+    title: "Blog 3",
+    content: "Content of the blog 3..Content of the blog 3..Content of the blog 3..Content of the blog 2..Content of the blog 3..",
+    author: "Arun",
+    date: "2024-05-09",
+    id: 2,
+  },
+  
 ];
 
 
