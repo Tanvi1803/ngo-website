@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 const MembershipForm = () => {
   const [showForm, setShowForm] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [showMembers, setShowMembers] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     dob: '',
@@ -14,6 +15,7 @@ const MembershipForm = () => {
     acceptance: false,
     image: null,
   });
+  const [members, setMembers] = useState([]);
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
@@ -26,17 +28,28 @@ const MembershipForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setShowPopup(true);
-    console.log(formData);
-    // Add your form submission logic here
+    // Create Object URL for the image if available
+    const newMember = {
+      ...formData,
+      image: formData.image ? URL.createObjectURL(formData.image) : null,
+    };
+    setMembers((prevMembers) => {
+      const updatedMembers = [...prevMembers, newMember];
+      localStorage.setItem('members', JSON.stringify(updatedMembers));
+      return updatedMembers;
+    });
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleRemoveMember = (index) => {
+    const updatedMembers = members.filter((_, i) => i !== index);
+    setMembers(updatedMembers);
+    localStorage.setItem('members', JSON.stringify(updatedMembers));
   };
 
   useEffect(() => {
-    scrollToTop();
-  }, [showForm]);
+    const savedMembers = JSON.parse(localStorage.getItem('members'));
+    if (savedMembers) setMembers(savedMembers);
+  }, []);
 
   return (
     <div className="border-8 border-[#fee57e] bg-gray-100 p-6">
@@ -107,10 +120,10 @@ const MembershipForm = () => {
             </button>
             <button
               type="button"
-              onClick={() => setShowForm(false)}
-              className="bg-gray-200 hover:bg-gray-300 text-[#280101] p-3 rounded w-full"
+              onClick={() => setShowMembers(true)}
+              className="w-full p-3 mt-2 bg-gray-200 hover:bg-gray-300 text-[#280101] rounded"
             >
-              Go Back
+              View Members
             </button>
           </motion.form>
         </div>
@@ -123,11 +136,11 @@ const MembershipForm = () => {
         >
           <h3 className="text-lg font-bold">Membership Guidelines</h3>
           <ul className="pl-5 list-disc">
-            <li>Every Member will have to donate some amount in group funds per month for the on-field operations. We believe in full transparency; thus, every detail of the total collected money and expenses will be shared with you via WhatsApp group.</li>
-            <li>Remember the main motto of joining MAATI-16: to be a helping hand to society. It is compulsory for all members to actively participate in every drive or any event of the foundation; failing which you will be answerable to the core team.</li>
-            <li>We will have proper on-field meetings which are compulsory to attend for every member.</li>
-            <li>You are not allowed to share photos or footage of any on-field activity or drive conducted by us without the watermark, logo, or mention of MAATI-16's identity. No self-promotion will be tolerated.</li>
-            <li>Every member must feed animals like dogs and cows and help every living being. You can also keep grains for birds or water outside your house for thirsty animals.</li>
+            <li>Every Member will have to donate some amount in group funds per month for the on-field operations...</li>
+            <li>Remember the main motto of joining MAATI-16...</li>
+            <li>We will have proper on-field meetings...</li>
+            <li>You are not allowed to share photos or footage...</li>
+            <li>Every member must feed animals like dogs and cows...</li>
             <li>If you do not abide by any of the rules, you will be terminated from the group.</li>
           </ul>
 
@@ -172,11 +185,48 @@ const MembershipForm = () => {
               >
                 Close
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showMembers && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <h2 className="text-3xl font-bold mb-6 text-center">Members List</h2>
+            {members.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {members.map((member, index) => (
+                  <div
+                    key={index}
+                    className="p-4 bg-gray-100 rounded-lg shadow-md flex flex-col items-center"
+                  >
+                    <img
+                      src={member.image || 'path/to/default/image.jpg'}
+                      alt={member.name}
+                      className="w-32 h-32 rounded-full mb-3"
+                    />
+                    <h3 className="text-lg font-semibold">{member.name}</h3>
+                    <p>Date of Birth: {member.dob}</p>
+                    <p>Contact: {member.contact}</p>
+                    <button
+                      onClick={() => handleRemoveMember(index)}
+                      className="mt-2 px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center">No members found.</p>
+            )}
+            <div className="flex justify-center mt-4">
               <button
-                onClick={() => setShowForm(true)}
-                className="w-full p-2 text-white bg-gray-300 rounded hover:bg-gray-400"
+                onClick={() => setShowMembers(false)}
+                className="px-4 py-2 text-white bg-amber-500 rounded hover:bg-amber-600"
               >
-                Back
+                Close
               </button>
             </div>
           </div>
