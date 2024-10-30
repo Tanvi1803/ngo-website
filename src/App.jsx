@@ -18,6 +18,8 @@ import DonorListPage from './pages/DonorListPage'; // Import the new DonorListPa
 import EventPage from './pages/EventPage'; // Import Event Listing Page
  // Import Event Registration Page
 import EventRegistration from './pages/EventRegistration';
+import Chatbot from './pages/Chatbot'; 
+
 
 function App() {
     return (
@@ -45,6 +47,9 @@ function App() {
                     
                     {/* <Route path="/register-event/:eventId" element={<EventRegistration />} /> */}
                     <Route path="/event-registration/:id" element={<EventRegistration />} />
+
+                    <Route path="/chatbot" element={<Chatbot />} />
+                    
 
 
                     

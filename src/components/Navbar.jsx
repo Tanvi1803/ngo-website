@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaHome, FaInfoCircle, FaBriefcase, FaImages, FaProjectDiagram, FaBlog, FaDonate, FaBars, FaTimes } from 'react-icons/fa';
+import { FaHome, FaInfoCircle, FaBriefcase, FaImages, FaProjectDiagram, FaBlog, FaDonate, FaBars, FaTimes, FaComments } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import logo from '../assets/logo.png';
 
@@ -208,6 +208,16 @@ const Navbar = () => {
             </li> */}
             <li>
               <Link
+                to="/chatbot"
+                className={`flex items-center py-2 px-4 rounded-lg transition-colors duration-300 ${isActive('/chatbot') ? 'bg-amber-800 text-white' : 'text-gray-800 hover:text-white hover:bg-amber-800'}`}
+                onClick={closeMenu}
+              >
+                <FaComments className="mr-2" />Chatbot
+              </Link>
+            </li>
+
+            <li>
+              <Link
                 to="/events"
                 className={`flex items-center py-2 px-4 rounded-lg transition-colors duration-300 ${isActive('/events') ? 'bg-amber-800 text-white' : 'text-gray-800 hover:text-white hover:bg-amber-800'}`}
                 onClick={closeMenu}
@@ -395,6 +405,15 @@ const Navbar = () => {
               <FaPhone className="mr-2" />Contact Us
             </Link>
           </li> */}
+           <li>
+            <Link
+              to="/chatbot"
+              className={`flex items-center py-2 px-4 rounded-lg transition-colors duration-300 ${isActive('/chatbot') ? 'bg-amber-800 text-white' : 'text-gray-800 hover:text-white hover:bg-amber-800'}`}
+              onClick={closeMenu}
+            >
+              <FaComments className="mr-2" />Chatbot
+            </Link>
+          </li>
           <li>
             <Link
               to="/donate-us"
